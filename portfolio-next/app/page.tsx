@@ -56,12 +56,12 @@ const testimonials = [
 ];
 
 const clients = [
-  { src: '/images/logo-1-color.png', name: 'Client 1' },
-  { src: '/images/logo-2-color.png', name: 'Client 2' },
-  { src: '/images/logo-3-color.png', name: 'Client 3' },
-  { src: '/images/logo-4-color.png', name: 'Client 4' },
-  { src: '/images/logo-5-color.png', name: 'Client 5' },
-  { src: '/images/logo-6-color.png', name: 'Client 6' },
+  { src: '/images/clients/client-1.svg', name: 'Client 1' },
+  { src: '/images/clients/client-2.svg', name: 'Client 2' },
+  { src: '/images/clients/client-3.svg', name: 'Client 3' },
+  { src: '/images/clients/client-4.svg', name: 'Client 4' },
+  { src: '/images/clients/client-5.svg', name: 'Client 5' },
+  { src: '/images/clients/client-6.svg', name: 'Client 6' },
 ];
 
 export default function AboutPage() {
