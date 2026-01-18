@@ -2,58 +2,12 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Eye } from 'lucide-react';
+import Link from 'next/link';
+import { HugeiconsEyeIcon } from '@/components/ui/hugeicons-eye';
 import { cn } from '@/lib/utils';
+import { projects } from '@/lib/data/projects';
 
 const categories = ['All', 'Web design', 'Applications', 'Web development'];
-
-const projects = [
-  {
-    title: 'Finance',
-    category: 'Web development',
-    image: '/images/project-1.jpg',
-  },
-  {
-    title: 'Orizon',
-    category: 'Web development',
-    image: '/images/project-2.png',
-  },
-  {
-    title: 'Fundo',
-    category: 'Web design',
-    image: '/images/project-3.jpg',
-  },
-  {
-    title: 'Brawlhalla',
-    category: 'Applications',
-    image: '/images/project-4.png',
-  },
-  {
-    title: 'DSM.',
-    category: 'Web design',
-    image: '/images/project-5.png',
-  },
-  {
-    title: 'MetaSpark',
-    category: 'Web design',
-    image: '/images/project-6.png',
-  },
-  {
-    title: 'Summary',
-    category: 'Web development',
-    image: '/images/project-7.png',
-  },
-  {
-    title: 'Task Manager',
-    category: 'Applications',
-    image: '/images/project-8.jpg',
-  },
-  {
-    title: 'Arrival',
-    category: 'Web development',
-    image: '/images/project-9.png',
-  },
-];
 
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -91,10 +45,10 @@ export default function PortfolioPage() {
 
       {/* Projects Grid */}
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredProjects.map((project, index) => (
-          <li key={index}>
-            <button
-              type="button"
+        {filteredProjects.map((project) => (
+          <li key={project.slug}>
+            <Link
+              href={`/portfolio/${project.slug}`}
               className="group block w-full text-left rounded-lg overflow-hidden bg-surface-1 border border-background-border transition-transform hover:scale-[1.02]"
             >
               <figure className="relative aspect-[4/3] overflow-hidden">
@@ -105,7 +59,7 @@ export default function PortfolioPage() {
                   className="object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Eye className="h-8 w-8 text-accent" aria-hidden="true" />
+                  <HugeiconsEyeIcon size={32} className="text-accent" aria-hidden="true" />
                 </div>
               </figure>
               <div className="p-4">
@@ -114,7 +68,7 @@ export default function PortfolioPage() {
                 </h3>
                 <p className="text-sm text-foreground-subtle">{project.category}</p>
               </div>
-            </button>
+            </Link>
           </li>
         ))}
       </ul>
