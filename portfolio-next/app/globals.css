@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+:root {
+  /* Manus Design System - Light Mode */
+
+  /* Background colors */
+  --background: #ffffff;
+  --background-card: #f8f8f7;
+  --background-border: rgba(0, 0, 0, 0.06);
+
+  /* Foreground colors (text) */
+  --foreground: #34322d;
+  --foreground-muted: #5e5e5b;
+  --foreground-subtle: #858481;
+
+  /* Accent (Manus Blue) */
+  --accent: #0081f2;
+  --accent-hover: #0073d6;
+
+  /* Surface colors */
+  --surface-1: #fafafa;
+  --surface-2: #f0f0ef;
+
+  /* Semantic colors */
+  --error: #dc2626;
+  --error-light: #fef2f2;
+  --success: #16a34a;
+  --success-light: #f0fdf4;
+
+  /* Radius */
+  --radius-default: 14px;
+  --radius-lg: 20px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-card: var(--background-card);
+  --color-background-border: var(--background-border);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-libre-baskerville);
+  --radius-default: 14px;
+  --radius-lg: 20px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  position: relative; /* iOS 26+ Safari fix */
+}
+
+.root {
+  isolation: isolate; /* Base UI portal fix */
+}
+
+/* Heading typography - Manus serif font */
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--background-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground-subtle);
+}
+
+/* Horizontal scrollbar for carousels */
+.has-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.has-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--accent);
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

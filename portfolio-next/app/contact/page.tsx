@@ -1,0 +1,200 @@
+'use client';
+
+import { useActionState } from 'react';
+import { Mail, Phone, Globe, MapPin, Send, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { submitContact } from './actions';
+
+const contactInfo = [
+  {
+    icon: Mail,
+    title: 'Email',
+    value: 'faizintifada@gmail.com',
+    href: 'mailto:faizintifada@gmail.com',
+  },
+  {
+    icon: Phone,
+    title: 'Phone',
+    value: '+62 898 900 4363',
+    href: 'tel:+628989004363',
+  },
+  {
+    icon: Globe,
+    title: 'Website',
+    value: 'faizintifada.my.id',
+    href: 'https://faizintifada.my.id',
+  },
+  {
+    icon: MapPin,
+    title: 'Location',
+    value: 'Bandung, Indonesia',
+  },
+];
+
+export default function ContactPage() {
+  const [state, formAction, isPending] = useActionState(submitContact, {});
+
+  return (
+    <article className="bg-background-card border border-background-border rounded-lg p-6 lg:p-8">
+      <header>
+        <h2 className="text-2xl font-semibold text-foreground mb-6">Contact</h2>
+      </header>
+
+      {/* Map */}
+      <section className="mb-8 rounded-lg overflow-hidden border border-background-border">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253840.65295080092!2d107.41157449453124!3d-6.9034495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java%2C%20Indonesia!5e0!3m2!1sen!2sus!4v1647608789441!5m2!1sen!2sus"
+          width="100%"
+          height="300"
+          loading="lazy"
+          className="grayscale opacity-80"
+          title="Location Map"
+        />
+      </section>
+
+      {/* Contact Info Cards */}
+      <section className="mb-8">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {contactInfo.map((info) => (
+            <li
+              key={info.title}
+              className="flex items-center gap-4 rounded-lg bg-surface-1 border border-background-border p-4"
+            >
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-accent">
+                <info.icon className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-foreground-subtle uppercase">
+                  {info.title}
+                </p>
+                {info.href ? (
+                  <a
+                    href={info.href}
+                    className="block truncate text-sm text-foreground-muted hover:text-accent transition-colors"
+                  >
+                    {info.value}
+                  </a>
+                ) : (
+                  <p className="text-sm text-foreground-muted">{info.value}</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Contact Form */}
+      <section>
+        <h3 className="text-xl font-medium text-foreground mb-6">Contact Form</h3>
+
+        {state.success ? (
+          <div className="rounded-lg bg-success-light border border-success/30 p-6 text-center">
+            <p className="text-success font-medium mb-2">Message sent successfully!</p>
+            <p className="text-sm text-foreground-subtle">
+              Thank you for reaching out. I&apos;ll get back to you soon.
+            </p>
+          </div>
+        ) : (
+          <form action={formAction} className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="sr-only">
+                  Full name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="Full name"
+                  required
+                  minLength={2}
+                  aria-describedby={state.fieldErrors?.name ? 'name-error' : undefined}
+                  className={cn(
+                    'w-full rounded-lg bg-surface-1 border px-4 py-3 text-foreground',
+                    'placeholder:text-foreground-subtle focus:border-accent focus:outline-none transition-colors',
+                    state.fieldErrors?.name
+                      ? 'border-error'
+                      : 'border-background-border'
+                  )}
+                />
+                {state.fieldErrors?.name && (
+                  <p id="name-error" className="mt-1 text-sm text-error">
+                    {state.fieldErrors.name[0]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="email" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="Email address"
+                  required
+                  aria-describedby={state.fieldErrors?.email ? 'email-error' : undefined}
+                  className={cn(
+                    'w-full rounded-lg bg-surface-1 border px-4 py-3 text-foreground',
+                    'placeholder:text-foreground-subtle focus:border-accent focus:outline-none transition-colors',
+                    state.fieldErrors?.email
+                      ? 'border-error'
+                      : 'border-background-border'
+                  )}
+                />
+                {state.fieldErrors?.email && (
+                  <p id="email-error" className="mt-1 text-sm text-error">
+                    {state.fieldErrors.email[0]}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="message" className="sr-only">
+                Your message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                placeholder="Your message..."
+                required
+                minLength={10}
+                rows={6}
+                aria-describedby={state.fieldErrors?.message ? 'message-error' : undefined}
+                className={cn(
+                  'w-full rounded-lg bg-surface-1 border px-4 py-3 text-foreground resize-none',
+                  'placeholder:text-foreground-subtle focus:border-accent focus:outline-none transition-colors',
+                  state.fieldErrors?.message
+                    ? 'border-error'
+                    : 'border-background-border'
+                )}
+              />
+              {state.fieldErrors?.message && (
+                <p id="message-error" className="mt-1 text-sm text-error">
+                  {state.fieldErrors.message[0]}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isPending}
+              className={cn(
+                'inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-medium text-white',
+                'transition-all hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed'
+              )}
+            >
+              {isPending ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Send className="h-5 w-5" />
+              )}
+              <span>{isPending ? 'Sending...' : 'Send Message'}</span>
+            </button>
+          </form>
+        )}
+      </section>
+    </article>
+  );
+}
