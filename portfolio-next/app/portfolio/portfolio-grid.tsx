@@ -100,7 +100,7 @@ export function PortfolioGrid({ projects }: PortfolioGridProps) {
                     src={project.image}
                     alt={project.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-110"
                   />
                   <motion.div
                     className="absolute inset-0 bg-foreground/60 flex items-center justify-center"

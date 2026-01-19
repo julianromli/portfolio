@@ -89,7 +89,7 @@ export default function BlogPage() {
                   src={post.image}
                   alt={post.title}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-110"
                 />
               </figure>
               <div className="p-4">

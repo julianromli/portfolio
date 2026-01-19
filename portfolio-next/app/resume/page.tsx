@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Briefcase } from 'lucide-react';
 import { HugeiconsStarIcon } from '@/components/ui/hugeicons-star';
 import {
@@ -144,6 +144,8 @@ function Timeline({ iconConfig, title, items, delay = 0 }: TimelineProps) {
 }
 
 export default function ResumePage() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <article className="bg-background-card border border-background-border rounded-lg p-6 lg:p-8">
       <motion.header variants={fadeInUp} initial="initial" animate="animate">
@@ -187,13 +189,17 @@ export default function ResumePage() {
               >
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-accent to-accent-hover"
-                  initial={{ width: 0 }}
+                  initial={prefersReducedMotion ? false : { width: 0 }}
                   animate={{ width: `${skill.level}%` }}
-                  transition={{
-                    duration: 0.8,
-                    delay: index * 0.1 + 0.5,
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                  }}
+                  transition={
+                    prefersReducedMotion
+                      ? { duration: 0 }
+                      : {
+                          duration: 0.8,
+                          delay: index * 0.1 + 0.5,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }
+                  }
                 />
               </div>
             </motion.li>
