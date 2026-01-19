@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Libre_Baskerville } from 'next/font/google';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Navigation } from '@/components/layout/Navigation';
-import { PageTransition } from '@/components/layout/PageTransition';
+
 import './globals.css';
 
 const libreBaskerville = Libre_Baskerville({
@@ -41,7 +41,7 @@ export default function RootLayout({
             <Sidebar />
             <div className="flex-1 min-w-0">
               <Navigation />
-              <PageTransition>{children}</PageTransition>
+              {children}
             </div>
           </main>
         </div>
