@@ -1,4 +1,13 @@
+'use client';
+
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  cardHover,
+} from '@/lib/animations';
 
 const blogPosts = [
   {
@@ -59,23 +68,28 @@ const blogPosts = [
 export default function BlogPage() {
   return (
     <article className="bg-background-card border border-background-border rounded-lg p-6 lg:p-8">
-      <header>
+      <motion.header variants={fadeInUp} initial="initial" animate="animate">
         <h2 className="text-2xl font-semibold text-foreground mb-6">Blog</h2>
-      </header>
+      </motion.header>
 
-      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.ul
+        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
         {blogPosts.map((post, index) => (
-          <li key={index}>
+          <motion.li key={index} variants={staggerItem} whileHover={cardHover}>
             <button
               type="button"
-              className="group block w-full text-left rounded-lg overflow-hidden bg-surface-1 border border-background-border transition-transform hover:scale-[1.02]"
+              className="group block w-full text-left rounded-lg overflow-hidden bg-surface-1 border border-background-border"
             >
               <figure className="relative aspect-[16/9] overflow-hidden">
                 <Image
                   src={post.image}
                   alt={post.title}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </figure>
               <div className="p-4">
@@ -92,9 +106,9 @@ export default function BlogPage() {
                 </p>
               </div>
             </button>
-          </li>
+          </motion.li>
         ))}
-      </ul>
+      </motion.ul>
     </article>
   );
 }

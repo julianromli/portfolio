@@ -1,8 +1,14 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { BookOpen, Briefcase } from 'lucide-react';
 import { HugeiconsStarIcon } from '@/components/ui/hugeicons-star';
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+} from '@/lib/animations';
 
 const education = [
   {
@@ -80,55 +86,90 @@ interface TimelineProps {
     period: string;
     description: string;
   }>;
+  delay?: number;
 }
 
-function Timeline({ iconConfig, title, items }: TimelineProps) {
+function Timeline({ iconConfig, title, items, delay = 0 }: TimelineProps) {
   return (
-    <section className="mb-8">
+    <motion.section
+      className="mb-8"
+      variants={fadeInUp}
+      initial="initial"
+      animate="animate"
+      transition={{ delay }}
+    >
       <div className="flex items-center gap-4 mb-6">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-1 text-accent">
+        <motion.div
+          className="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-1 text-accent"
+          whileHover={{ scale: 1.05, rotate: 5 }}
+          transition={{ duration: 0.2 }}
+        >
           {iconConfig.type === 'animated' ? (
             <iconConfig.AnimatedIcon size={20} />
           ) : (
             <iconConfig.icon className="h-5 w-5" />
           )}
-        </div>
+        </motion.div>
         <h3 className="text-xl font-medium text-foreground">{title}</h3>
       </div>
 
-      <ol className="relative border-l-2 border-surface-2 ml-6 space-y-6">
+      <motion.ol
+        className="relative border-l-2 border-surface-2 ml-6 space-y-6"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
         {items.map((item, index) => (
-          <li key={index} className="pl-6 relative">
-            <div className="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-accent bg-background-card" />
+          <motion.li
+            key={index}
+            className="pl-6 relative"
+            variants={staggerItem}
+          >
+            <motion.div
+              className="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-accent bg-background-card"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: index * 0.1 + 0.2, type: 'spring', stiffness: 200 }}
+            />
             <h4 className="font-medium text-foreground mb-1">{item.title}</h4>
             <span className="text-sm text-accent mb-2 block">{item.period}</span>
             <p className="text-sm text-foreground-subtle leading-relaxed">
               {item.description}
             </p>
-          </li>
+          </motion.li>
         ))}
-      </ol>
-    </section>
+      </motion.ol>
+    </motion.section>
   );
 }
 
 export default function ResumePage() {
   return (
     <article className="bg-background-card border border-background-border rounded-lg p-6 lg:p-8">
-      <header>
+      <motion.header variants={fadeInUp} initial="initial" animate="animate">
         <h2 className="text-2xl font-semibold text-foreground mb-6">Resume</h2>
-      </header>
+      </motion.header>
 
-      <Timeline iconConfig={{ type: 'static', icon: BookOpen }} title="Education" items={education} />
-      <Timeline iconConfig={{ type: 'static', icon: Briefcase }} title="Experience" items={experience} />
-      <Timeline iconConfig={{ type: 'animated', AnimatedIcon: HugeiconsStarIcon }} title="Certifications" items={certifications} />
+      <Timeline iconConfig={{ type: 'static', icon: BookOpen }} title="Education" items={education} delay={0.1} />
+      <Timeline iconConfig={{ type: 'static', icon: Briefcase }} title="Experience" items={experience} delay={0.2} />
+      <Timeline iconConfig={{ type: 'animated', AnimatedIcon: HugeiconsStarIcon }} title="Certifications" items={certifications} delay={0.3} />
 
       {/* Skills */}
-      <section>
+      <motion.section
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        transition={{ delay: 0.4 }}
+      >
         <h3 className="text-xl font-medium text-foreground mb-6">My Skills</h3>
-        <ul className="rounded-lg bg-surface-1 border border-background-border p-6 space-y-5">
-          {skills.map((skill) => (
-            <li key={skill.name}>
+        <motion.ul
+          className="rounded-lg bg-surface-1 border border-background-border p-6 space-y-5"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          {skills.map((skill, index) => (
+            <motion.li key={skill.name} variants={staggerItem}>
               <div className="flex justify-between items-center mb-2">
                 <h4 className="text-sm font-medium text-foreground">
                   {skill.name}
@@ -144,15 +185,21 @@ export default function ResumePage() {
                 aria-valuetext={`${skill.name}: ${skill.label} (${skill.level}%)`}
                 className="h-2 rounded-full bg-surface-2 overflow-hidden"
               >
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-accent to-accent-hover transition-all duration-500"
-                  style={{ width: `${skill.level}%` }}
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-accent to-accent-hover"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${skill.level}%` }}
+                  transition={{
+                    duration: 0.8,
+                    delay: index * 0.1 + 0.5,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
                 />
               </div>
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </section>
+        </motion.ul>
+      </motion.section>
     </article>
   );
 }

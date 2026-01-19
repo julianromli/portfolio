@@ -1,11 +1,20 @@
 'use client';
 
 import { useActionState } from 'react';
+import { motion } from 'framer-motion';
 import { Phone, Globe, MapPin, Send } from 'lucide-react';
 import { HugeiconsMailIcon } from '@/components/ui/hugeicons-mail';
 import { HugeiconsRefreshIcon } from '@/components/ui/hugeicons-refresh';
 import { cn } from '@/lib/utils';
 import { submitContact } from './actions';
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  cardHover,
+  buttonHover,
+  buttonTap,
+} from '@/lib/animations';
 
 type ContactInfoItem =
   | { animated: true; AnimatedIcon: typeof HugeiconsMailIcon; title: string; value: string; href?: string }
@@ -46,12 +55,18 @@ export default function ContactPage() {
 
   return (
     <article className="bg-background-card border border-background-border rounded-lg p-6 lg:p-8">
-      <header>
+      <motion.header variants={fadeInUp} initial="initial" animate="animate">
         <h2 className="text-2xl font-semibold text-foreground mb-6">Contact</h2>
-      </header>
+      </motion.header>
 
       {/* Map */}
-      <section className="mb-8 rounded-lg overflow-hidden border border-background-border">
+      <motion.section
+        className="mb-8 rounded-lg overflow-hidden border border-background-border"
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        transition={{ delay: 0.1 }}
+      >
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253840.65295080092!2d107.41157449453124!3d-6.9034495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java%2C%20Indonesia!5e0!3m2!1sen!2sus!4v1647608789441!5m2!1sen!2sus"
           width="100%"
@@ -60,23 +75,34 @@ export default function ContactPage() {
           className="grayscale opacity-80"
           title="Location Map"
         />
-      </section>
+      </motion.section>
 
       {/* Contact Info Cards */}
-      <section className="mb-8">
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.section className="mb-8">
+        <motion.ul
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
           {contactInfo.map((info) => (
-            <li
+            <motion.li
               key={info.title}
-              className="flex items-center gap-4 rounded-lg bg-surface-1 border border-background-border p-4"
+              variants={staggerItem}
+              whileHover={cardHover}
+              className="flex items-center gap-4 rounded-lg bg-surface-1 border border-background-border p-4 cursor-default"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-accent">
+              <motion.div
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-accent"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                transition={{ duration: 0.2 }}
+              >
                 {info.animated ? (
                   <info.AnimatedIcon size={20} />
                 ) : (
                   <info.icon className="h-5 w-5" />
                 )}
-              </div>
+              </motion.div>
               <div className="min-w-0">
                 <p className="text-xs text-foreground-subtle uppercase">
                   {info.title}
@@ -92,25 +118,41 @@ export default function ContactPage() {
                   <p className="text-sm text-foreground-muted">{info.value}</p>
                 )}
               </div>
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </section>
+        </motion.ul>
+      </motion.section>
 
       {/* Contact Form */}
-      <section>
+      <motion.section
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        transition={{ delay: 0.3 }}
+      >
         <h3 className="text-xl font-medium text-foreground mb-6">Contact Form</h3>
 
         {state.success ? (
-          <div className="rounded-lg bg-success-light border border-success/30 p-6 text-center">
+          <motion.div
+            className="rounded-lg bg-success-light border border-success/30 p-6 text-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
             <p className="text-success font-medium mb-2">Message sent successfully!</p>
             <p className="text-sm text-foreground-subtle">
               Thank you for reaching out. I&apos;ll get back to you soon.
             </p>
-          </div>
+          </motion.div>
         ) : (
-          <form action={formAction} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
+          <motion.form
+            action={formAction}
+            className="space-y-4"
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+          >
+            <motion.div className="grid gap-4 sm:grid-cols-2" variants={staggerItem}>
               <div>
                 <label htmlFor="name" className="sr-only">
                   Full name
@@ -162,9 +204,9 @@ export default function ContactPage() {
                   </p>
                 )}
               </div>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div variants={staggerItem}>
               <label htmlFor="message" className="sr-only">
                 Your message
               </label>
@@ -189,26 +231,30 @@ export default function ContactPage() {
                   {state.fieldErrors.message[0]}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className={cn(
-                'inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-medium text-white',
-                'transition-all hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed'
-              )}
-            >
-              {isPending ? (
-                <HugeiconsRefreshIcon size={20} className="animate-spin" />
-              ) : (
-                <Send className="h-5 w-5" />
-              )}
-              <span>{isPending ? 'Sending...' : 'Send Message'}</span>
-            </button>
-          </form>
+            <motion.div variants={staggerItem}>
+              <motion.button
+                type="submit"
+                disabled={isPending}
+                whileHover={!isPending ? buttonHover : undefined}
+                whileTap={!isPending ? buttonTap : undefined}
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-medium text-white',
+                  'transition-colors hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed'
+                )}
+              >
+                {isPending ? (
+                  <HugeiconsRefreshIcon size={20} className="animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
+                <span>{isPending ? 'Sending...' : 'Send Message'}</span>
+              </motion.button>
+            </motion.div>
+          </motion.form>
         )}
-      </section>
+      </motion.section>
     </article>
   );
 }

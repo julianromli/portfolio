@@ -1,5 +1,14 @@
+'use client';
+
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Palette, Code, Users, Video } from 'lucide-react';
+import {
+  staggerContainer,
+  staggerItem,
+  fadeInUp,
+  cardHover,
+} from '@/lib/animations';
 
 const services = [
   {
@@ -67,20 +76,25 @@ const clients = [
 export default function AboutPage() {
   return (
     <article className="bg-background-card border border-background-border rounded-lg p-6 lg:p-8">
-      <header>
+      <motion.header variants={fadeInUp} initial="initial" animate="animate">
         <h2 className="text-2xl font-semibold text-foreground mb-6">About me</h2>
-      </header>
+      </motion.header>
 
       {/* About Text */}
-      <section className="space-y-4 text-foreground-muted leading-relaxed mb-8">
-        <p>
+      <motion.section
+        className="space-y-4 text-foreground-muted leading-relaxed mb-8"
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+      >
+        <motion.p variants={staggerItem}>
           Results-driven Digital Specialist with strong expertise in AI community
           management, visual communication, and digital product development.
           Proven experience as a founder and leader of innovation-driven
           communities, managing over 800 active members and delivering impactful
           educational content on AI Coding across multiple platforms.
-        </p>
-        <p>
+        </motion.p>
+        <motion.p variants={staggerItem}>
           Skilled in visual design, motion graphics, and videography, supporting
           organizations and clients through high-quality content and strategic
           digitalization. Adept at leveraging AI technologies, streamlining
@@ -88,19 +102,31 @@ export default function AboutPage() {
           environments. Demonstrated leadership in campus organizations,
           recognized for mentoring and prompt engineering, and fluent in both
           English and Indonesian.
-        </p>
-      </section>
+        </motion.p>
+      </motion.section>
 
       {/* Services */}
-      <section className="mb-8">
+      <motion.section
+        className="mb-8"
+        initial="initial"
+        animate="animate"
+        variants={fadeInUp}
+      >
         <h3 className="text-xl font-medium text-foreground mb-6">
           What I&apos;m doing
         </h3>
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <motion.ul
+          className="grid gap-4 sm:grid-cols-2"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
           {services.map((service) => (
-            <li
+            <motion.li
               key={service.title}
-              className="flex gap-4 rounded-lg bg-surface-1 border border-background-border p-5"
+              variants={staggerItem}
+              whileHover={cardHover}
+              className="flex gap-4 rounded-lg bg-surface-1 border border-background-border p-5 cursor-default"
             >
               <div className="shrink-0">
                 <Image
@@ -119,24 +145,35 @@ export default function AboutPage() {
                   {service.description}
                 </p>
               </div>
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </section>
+        </motion.ul>
+      </motion.section>
 
       {/* Testimonials */}
-      <section className="mb-8">
+      <motion.section
+        className="mb-8"
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+      >
         <h3 className="text-xl font-medium text-foreground mb-6">Testimonials</h3>
-        <ul
+        <motion.ul
           className="flex gap-4 overflow-x-auto pb-4 has-scrollbar snap-x snap-mandatory"
           tabIndex={0}
           role="region"
           aria-label="Testimonials carousel"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
         >
-          {testimonials.map((testimonial) => (
-            <li
+          {testimonials.map((testimonial, index) => (
+            <motion.li
               key={testimonial.name}
-              className="shrink-0 w-72 snap-start rounded-lg bg-surface-1 border border-background-border p-5"
+              variants={staggerItem}
+              custom={index}
+              whileHover={cardHover}
+              className="shrink-0 w-72 snap-start rounded-lg bg-surface-1 border border-background-border p-5 cursor-default"
             >
               <div className="flex items-center gap-3 mb-4">
                 <Image
@@ -151,23 +188,29 @@ export default function AboutPage() {
               <p className="text-sm text-foreground-subtle leading-relaxed line-clamp-4">
                 {testimonial.text}
               </p>
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </section>
+        </motion.ul>
+      </motion.section>
 
       {/* Clients */}
-      <section>
+      <motion.section variants={fadeInUp} initial="initial" animate="animate">
         <h3 className="text-xl font-medium text-foreground mb-6">Clients</h3>
-        <ul
+        <motion.ul
           className="flex gap-4 overflow-x-auto pb-4 has-scrollbar"
           tabIndex={0}
           role="region"
           aria-label="Clients carousel"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
         >
-          {clients.map((client) => (
-            <li
+          {clients.map((client, index) => (
+            <motion.li
               key={client.name}
+              variants={staggerItem}
+              custom={index}
+              whileHover={{ scale: 1.05, opacity: 1 }}
               className="shrink-0 flex items-center justify-center rounded-lg bg-surface-1 border border-background-border p-4 h-20 w-36"
             >
               <Image
@@ -175,12 +218,12 @@ export default function AboutPage() {
                 alt={client.name}
                 width={100}
                 height={40}
-                className="max-h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                className="max-h-10 w-auto object-contain opacity-60 transition-opacity hover:opacity-100"
               />
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </section>
+        </motion.ul>
+      </motion.section>
     </article>
   );
 }
