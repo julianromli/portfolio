@@ -1,7 +1,17 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import { UploadThingError } from 'uploadthing/server';
+import { cookies } from 'next/headers';
 
 const f = createUploadthing();
+
+async function checkAdminSession() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get('admin_session');
+  if (!session?.value) {
+    throw new UploadThingError('Unauthorized');
+  }
+  return {};
+}
 
 export const uploadRouter = {
   projectImage: f({
@@ -10,15 +20,8 @@ export const uploadRouter = {
       maxFileCount: 1,
     },
   })
-    .middleware(async ({ req }) => {
-      const adminPassword = process.env.ADMIN_PASSWORD;
-      const authHeader = req.headers.get('x-admin-auth');
-
-      if (!adminPassword || authHeader !== adminPassword) {
-        throw new UploadThingError('Unauthorized');
-      }
-
-      return {};
+    .middleware(async () => {
+      return checkAdminSession();
     })
     .onUploadComplete(async ({ file }) => {
       console.log('Project image uploaded:', file.ufsUrl);
@@ -31,15 +34,8 @@ export const uploadRouter = {
       maxFileCount: 10,
     },
   })
-    .middleware(async ({ req }) => {
-      const adminPassword = process.env.ADMIN_PASSWORD;
-      const authHeader = req.headers.get('x-admin-auth');
-
-      if (!adminPassword || authHeader !== adminPassword) {
-        throw new UploadThingError('Unauthorized');
-      }
-
-      return {};
+    .middleware(async () => {
+      return checkAdminSession();
     })
     .onUploadComplete(async ({ file }) => {
       console.log('Screenshot uploaded:', file.ufsUrl);

@@ -2,32 +2,32 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import {
-  Mail,
-  Phone,
-  Globe,
-  MapPin,
-  ChevronDown,
-  Linkedin,
-  Youtube,
-  MessageCircle,
-} from 'lucide-react';
+import { Phone, Globe, MapPin, Linkedin, Youtube, MessageCircle } from 'lucide-react';
+import { HugeiconsMailIcon } from '@/components/ui/hugeicons-mail';
+import { HugeiconsChevronDownIcon } from '@/components/ui/hugeicons-chevron-down';
 import { cn } from '@/lib/utils';
 
-const contacts = [
+type ContactItem =
+  | { animated: true; AnimatedIcon: typeof HugeiconsMailIcon; title: string; value: string; href?: string; external?: boolean }
+  | { animated: false; icon: typeof Phone; title: string; value: string; href?: string; external?: boolean };
+
+const contacts: ContactItem[] = [
   {
-    icon: Mail,
+    animated: true,
+    AnimatedIcon: HugeiconsMailIcon,
     title: 'Email',
     value: 'faizintifada@gmail.com',
     href: 'mailto:faizintifada@gmail.com',
   },
   {
+    animated: false,
     icon: Phone,
     title: 'Phone',
     value: '+62 898 900 4363',
     href: 'tel:+628989004363',
   },
   {
+    animated: false,
     icon: Globe,
     title: 'Website',
     value: 'faizintifada.my.id',
@@ -35,6 +35,7 @@ const contacts = [
     external: true,
   },
   {
+    animated: false,
     icon: MapPin,
     title: 'Location',
     value: 'Bandung, Indonesia',
@@ -101,9 +102,10 @@ export function Sidebar() {
           )}
         >
           <span>Show Contacts</span>
-          <ChevronDown
+          <HugeiconsChevronDownIcon
+            size={16}
             className={cn(
-              'h-4 w-4 transition-transform',
+              'transition-transform',
               isExpanded && 'rotate-180'
             )}
           />
@@ -125,7 +127,11 @@ export function Sidebar() {
           {contacts.map((contact) => (
             <li key={contact.title} className="flex items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-surface-1 text-accent">
-                <contact.icon className="h-5 w-5" />
+                {contact.animated ? (
+                  <contact.AnimatedIcon size={20} />
+                ) : (
+                  <contact.icon className="h-5 w-5" />
+                )}
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-foreground-subtle uppercase">

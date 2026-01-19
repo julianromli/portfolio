@@ -2,6 +2,12 @@ import { eq } from 'drizzle-orm';
 import { projects, type Project } from './schema';
 import { projects as staticProjects, getProjectBySlug as staticGetBySlug, getAllProjectSlugs as staticGetSlugs } from '@/lib/data/projects';
 
+let lastQueryWasFromDb = false;
+
+export function isUsingRealDatabase(): boolean {
+  return lastQueryWasFromDb;
+}
+
 function convertStaticToDbFormat(p: typeof staticProjects[0], id: number): Project {
   return {
     ...p,
@@ -18,16 +24,37 @@ async function queryWithFallback<T>(
   fallback: () => T
 ): Promise<T> {
   if (!process.env.DATABASE_URL) {
+    lastQueryWasFromDb = false;
     return fallback();
   }
 
   try {
     const { db } = await import('./index');
-    if (!db) return fallback();
-    return await dbQuery();
+    if (!db) {
+      lastQueryWasFromDb = false;
+      return fallback();
+    }
+    const result = await dbQuery();
+    lastQueryWasFromDb = true;
+    return result;
   } catch (error) {
     console.warn('Database query failed, using static fallback:', error);
+    lastQueryWasFromDb = false;
     return fallback();
+  }
+}
+
+export async function checkDatabaseConnection(): Promise<{ connected: boolean; error?: string }> {
+  if (!process.env.DATABASE_URL) {
+    return { connected: false, error: 'DATABASE_URL not configured' };
+  }
+
+  try {
+    const { db } = await import('./index');
+    await db.select({ id: projects.id }).from(projects).limit(1);
+    return { connected: true };
+  } catch (error) {
+    return { connected: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
 

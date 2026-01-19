@@ -1,4 +1,8 @@
-import { BookOpen, Briefcase, Award } from 'lucide-react';
+'use client';
+
+import React from 'react';
+import { BookOpen, Briefcase } from 'lucide-react';
+import { HugeiconsStarIcon } from '@/components/ui/hugeicons-star';
 
 const education = [
   {
@@ -64,8 +68,12 @@ const skills = [
   { name: 'English', level: 90, label: 'Fluent' },
 ];
 
+type TimelineIcon = 
+  | { type: 'static'; icon: React.ComponentType<{ className?: string }> }
+  | { type: 'animated'; AnimatedIcon: typeof HugeiconsStarIcon };
+
 interface TimelineProps {
-  icon: React.ComponentType<{ className?: string }>;
+  iconConfig: TimelineIcon;
   title: string;
   items: Array<{
     title: string;
@@ -74,12 +82,16 @@ interface TimelineProps {
   }>;
 }
 
-function Timeline({ icon: Icon, title, items }: TimelineProps) {
+function Timeline({ iconConfig, title, items }: TimelineProps) {
   return (
     <section className="mb-8">
       <div className="flex items-center gap-4 mb-6">
         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-1 text-accent">
-          <Icon className="h-5 w-5" />
+          {iconConfig.type === 'animated' ? (
+            <iconConfig.AnimatedIcon size={20} />
+          ) : (
+            <iconConfig.icon className="h-5 w-5" />
+          )}
         </div>
         <h3 className="text-xl font-medium text-foreground">{title}</h3>
       </div>
@@ -107,9 +119,9 @@ export default function ResumePage() {
         <h2 className="text-2xl font-semibold text-foreground mb-6">Resume</h2>
       </header>
 
-      <Timeline icon={BookOpen} title="Education" items={education} />
-      <Timeline icon={Briefcase} title="Experience" items={experience} />
-      <Timeline icon={Award} title="Certifications" items={certifications} />
+      <Timeline iconConfig={{ type: 'static', icon: BookOpen }} title="Education" items={education} />
+      <Timeline iconConfig={{ type: 'static', icon: Briefcase }} title="Experience" items={experience} />
+      <Timeline iconConfig={{ type: 'animated', AnimatedIcon: HugeiconsStarIcon }} title="Certifications" items={certifications} />
 
       {/* Skills */}
       <section>

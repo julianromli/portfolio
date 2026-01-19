@@ -1,30 +1,40 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Mail, Phone, Globe, MapPin, Send, Loader2 } from 'lucide-react';
+import { Phone, Globe, MapPin, Send } from 'lucide-react';
+import { HugeiconsMailIcon } from '@/components/ui/hugeicons-mail';
+import { HugeiconsRefreshIcon } from '@/components/ui/hugeicons-refresh';
 import { cn } from '@/lib/utils';
 import { submitContact } from './actions';
 
-const contactInfo = [
+type ContactInfoItem =
+  | { animated: true; AnimatedIcon: typeof HugeiconsMailIcon; title: string; value: string; href?: string }
+  | { animated: false; icon: typeof Phone; title: string; value: string; href?: string };
+
+const contactInfo: ContactInfoItem[] = [
   {
-    icon: Mail,
+    animated: true,
+    AnimatedIcon: HugeiconsMailIcon,
     title: 'Email',
     value: 'faizintifada@gmail.com',
     href: 'mailto:faizintifada@gmail.com',
   },
   {
+    animated: false,
     icon: Phone,
     title: 'Phone',
     value: '+62 898 900 4363',
     href: 'tel:+628989004363',
   },
   {
+    animated: false,
     icon: Globe,
     title: 'Website',
     value: 'faizintifada.my.id',
     href: 'https://faizintifada.my.id',
   },
   {
+    animated: false,
     icon: MapPin,
     title: 'Location',
     value: 'Bandung, Indonesia',
@@ -61,7 +71,11 @@ export default function ContactPage() {
               className="flex items-center gap-4 rounded-lg bg-surface-1 border border-background-border p-4"
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-accent">
-                <info.icon className="h-5 w-5" />
+                {info.animated ? (
+                  <info.AnimatedIcon size={20} />
+                ) : (
+                  <info.icon className="h-5 w-5" />
+                )}
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-foreground-subtle uppercase">
@@ -186,7 +200,7 @@ export default function ContactPage() {
               )}
             >
               {isPending ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <HugeiconsRefreshIcon size={20} className="animate-spin" />
               ) : (
                 <Send className="h-5 w-5" />
               )}

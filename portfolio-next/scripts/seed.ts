@@ -134,7 +134,14 @@ async function seed() {
   }
 
   console.log('Connecting to database...');
-  const client = postgres(connectionString, { prepare: false, ssl: 'require' });
+  // Logic to determine SSL mode matching lib/db/index.ts
+  const isLocal = connectionString.includes('localhost') || connectionString.includes('127.0.0.1');
+  const shouldDisableSsl = process.env.DB_SSL === 'false' || isLocal;
+  
+  const client = postgres(connectionString, { 
+    prepare: false, 
+    ssl: shouldDisableSsl ? false : 'prefer' 
+  });
   const db = drizzle(client);
 
   console.log('Seeding projects...');

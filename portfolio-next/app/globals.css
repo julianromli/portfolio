@@ -121,3 +121,13 @@ h1, h2, h3 {
   white-space: nowrap;
   border-width: 0;
 }
+
+/* Reduced motion support for animated icons */
+@media (prefers-reduced-motion: reduce) {
+  [data-animated-icon] *,
+  [data-animated-icon] {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
